@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(datasets)\n?datasets\nlibrary(help = \"datasets\")\n\nstr(iris)\nwhich((iris$Species == \"setosa\") | (iris$Species == \"virginica\"))\n\nvec <- NULL\nfor(i in 1:nrow(iris)){\n  if((iris$Species == \"setosa\") || (iris$Species == \"virginica\") == TRUE){\n    vec[i] <- i\n  }\n}\n\nc(\"setosa\", \"virginica\") %in% iris$Species\n\nwhich(c(\"setosa\", \"virginica\") == iris$Species)\ndat <- read.csv(\"japanese_emmigration.txt\", sep = \";\")\ndat\nnrow(dat);ncol(dat)\n\n(colnames(dat) <- c(\"prefecture\",\"emigrants\",\"cultivated\",\"farmland\",\n                    \"arable\",\"labors\",\"pioneer\"))\n\nfac <- as.factor(dat$pioneer)\nlevels(fac) <- c(\"No pioneer\", \"Pioneer\")\n\ndat <- data.frame(Name = c(\"Mikaela\", \"Anders\", \"Regina\", \"Gustav\"),\n                  Age = c(24, 15, 57, 32))\n?data.frame\n\n(names <- as.character(c(\"Mikaela\", \"Anders\", \"Regina\", \"Gustav\", \"Anders\")))\n# convert to factor\n(names <- factor(names, levels = c(\"Anders\", \"Gustav\", \"Mikaela\", \"Regina\")))\n# each unique name becomes a level of the factor\nlevels(names) <- c(\"Mikaela\", \"Anders\", \"Regina\", \"Gustav\")\nnames\n",
+    "created" : 1515059733581.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "521231143",
+    "id" : "50821878",
+    "lastKnownWriteTime" : 1515156678,
+    "last_content_update" : 1515156678715,
+    "path" : "C:/Users/lukas/Desktop/B2/B-courses_R/Reworked/Other Help/HelpDoc/helpCode.R",
+    "project_path" : "helpCode.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,373 @@
+---
+title: "Useful Tips and Commands"
+author: "Lukas Arnroth"
+date: "4 januari 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this document some useful tricks and commands will be considered, these are commands that I use most of the time and they tend to ease the process of working with R.
+
+\section{Introduction to R}
+R is an open source statistical software, based on the functional programming language S, developed and maintained by Cran. It consists of base functions that comes with installation and user written packages. It does put much responsibility on the user in the sense that many functions that you use are written by users. You should always consult the package documentation on the Cran website when using a new package that you are unfamiliar with.  
+
+\section{General Tips}
+\subsection{Work in a R Project}
+Always work in a R project! R will automatically look for files in your project directory, rather than you having to specify the paths to all the files you want to read in. Furthermore R will automatically save plots to your project directory. You can see the files in your directory under the Files tab in the lower right hand side of the R studio window. 
+
+So when you start a new assignment do the following:
+\begin{itemize}
+\item Choose a folder for your repository (R project)
+\item In the R studio window go to File / New Project. Then click New Directory and then Empty Project. Once this is done, chose the location for where R will create a repository. Name the project and create.
+\item You should now have a folder containing a .Rproj file. Put all the code and data files associated with the assignment in this folder. 
+\end{itemize}
+
+Whenever you want to open R to continue with you assignment, always open the .Rproj, rather than just opening R studios. R will have saved your global environment (something referred to as an image) and you're good to go.
+
+\subsection{Read like R}
+Before it becomes second nature, try to make a habit of reading your code like R does. This is done from inside out and starting on the right side of assignment. Lets look at an example
+
+```{r, message= F, warning= F}
+x <- c(1,4,6,7)
+```
+
+This you would read as, starting on the right side, take values 1,4,6,7 and concatonate into a vector (read from inside out). Then take this object and assign it to x in the global environment. What about
+
+```{r, message= F, warning= F}
+mean(x*10)
+```
+
+So starting from inside out, take the vector x and multiply all elements in x by 10. Once this is done move outside the paranthesis and take mean. Try reading the operation below for yourself:
+
+```{r, message= F, warning= F}
+var(c(mean(x*10), 6.5))
+```
+
+\subsection{Structure of Functions in R}
+For those of you not familiar with programming at all, R is a scripted functional language. You don't need to pay much attention at all as to what this means exactly, but know that everything you use in R is a function written by other people. Functions takes arguments, some necessary and some optional, and performs a task. You can use the documentation to understand what a function does. This is done by writing ? followed by the function name. In the description you find what the function(s) does. In the usage you find the parameters the function takes. If a parameter is followed by an equal sign, it means that it has a default value or setting and you don't have to supply this parameter with any object for the function to work. Parameters without any equality sign needs to be assigned an object to work. What type of objects you assign to the parameters is specified in the arguments section. 
+
+Note that if you don't use the parameter names in your own usage of the function (for example mean(object) vs. mean(x = object)) you need to supply the arguments in the same order as in the usage section of the help documentation. 
+
+If you're uncertain of how a function works and what is it's intent you should consult the examples in the bottom of the help documentation.
+
+\subsection{Write Readable Code}
+Try to make your code as readable as possible! I often seperate sections of code by using the comment symbol aswell. Keep the code spacious and comment on what you are doing, for your own sakes. Here's an example of how I usually seperate my code into sections
+
+```{r, message= F, warning= F, results="hide", fig.show="hide"}
+######################
+####### TASK 1 #######
+######################
+
+### A) Generate 100 randomstandard normals and get mean
+
+# get 100 standard normals
+x <- rnorm(100)
+# calculate the mean
+mean(x)
+
+### B) Use the same values and get the variance
+
+# calculate the variance
+var(x)
+
+######################
+####### TASK 2 #######
+######################
+
+### A) Display the results as a histogram
+
+# Show x as histogram
+hist(x)
+```
+
+
+\subsection{Google}
+You need to learn how to google problems that you encounter. Someone has had your problem before. One online resource which should become your best friend is stackoverflow. Just type in your problem and add stackoverflow or stack at the end of your search. You will pretty much be guaranteed to find working solutions. Just make sure to take a look at the code and be sure that it does what you think it does. 
+
+\section{Data Types}
+
+\subsection{The basic types}
+The fundamental variable types in R are character, numeric, integer and factor. Factor is a bit more tricky than the other three, and will be dealt with seperately. These types are not about storage, but rather the levels of the elements in your objects.
+
+```{r, message= F, warning= F}
+# character: strings 
+"Lukas"
+# integer: whole numbers
+1
+# numeric (known as double in other programming languages): real line
+1.2
+```
+
+\subsection{Vectors}
+Vectors are the most basic type of data storage in R. This is a one dimensional object where all the elements must be of the same type. To create a vector you use c(), which techniqually reads as concatonate but I personally refer to as combine. 
+
+```{r, message= F, warning= F}
+c("Lukas", "Lars", "Paulina", "Ragna", "Thomas")
+```
+
+This is a vector of characters. If I throw in a number in the c() call, it would implicitly be converted to character. R does this conversion to the "lower" format automatically as you can't convert Lukas to a number but you can convert a number to a character. 
+
+The dimension of a vector is referred to as $length()$, which is the number of elements in the vector.
+
+```{r, message= F, warning= F}
+length(c("Lukas", "Lars", "Paulina", "Ragna", "Thomas"))
+```
+
+You subset this dimension using one value within [] following the vector object. Say that I want to extract the 4th element (note that indexing in R begins at 1, so the first position is 1) I would do it as
+
+```{r, message= F, warning= F}
+c("Lukas", "Lars", "Paulina", "Ragna", "Thomas")[4]
+```
+
+If you want to transform a vector, say multiply all elements by 5, you do it as follows
+```{r, message= F, warning= F}
+c(3, 5, 2) * 10
+```
+
+Quicktip: if you want to create a vector of values in succession, say 1 to 10, you can use ':'
+
+```{r, message= F, warning= F}
+c(1,2,3,4,5,6,7,8,9,10)
+1:10
+```
+
+\subsection{Matricies}
+A matrix has two dimensions with elements of all the same types. The dimensions are columns and rows, and in subsetting you need to specify both as $[row id, column id]$. If you leave an entry blank R will get all rows or columns. Also you can supply the indexing operators with vectors. Lets take a quick look.
+
+```{r, message= F, warning= F}
+(mat <- matrix(c(1,2,3,4,5,6), 
+               nrow = 3, ncol = 2))
+# get row 2, col 2
+mat[2, 2]
+# get all rows, col 2
+mat[, 2]
+# get row 1 and 3, column 2
+mat[c(1,3), 2]
+```
+
+Multiplying a vector by a scalar works the same way as for the vector object. R will multiply all the elements of the matrix with this value
+
+\subsection{Data Frame}
+This is the way you store data in R. In many ways it is like a matrix, and you can subset is like a matrix using the [$row id$, $col id$] mechanism. What sets it apart from a matrix is that the columns can be of different variable type. It is like a composition of vectors, in the sense that each column is a vector and that vector must be homogenous with respect to type (character, numeric etc.) There is also the \$ operator for subsetting. Since we've inspected the matrix indexing, lets look at the \$.
+
+```{r, message= F, warning= F}
+(dat <- data.frame(Name = c("Mikaela", "Anders", "Regina", "Gustav"),
+                   Age = c(24, 15, 57, 32),
+                   # ignore the parameter below
+                   stringsAsFactors = F))
+# can you see the similiraties with the matrix object?
+```
+
+Here we have created a dataframe with two variables, Name and Age, which are of two different types. You can subset the $dat$ object using the variable names as follows
+
+```{r, message= F, warning= F}
+dat$Name
+dat$Age
+```
+
+\subsection{Factors}
+Factors are the best way to store a nominal variable in R. The factor stores the nominal values as a vector of integers in the range $\{1, \; ...\; , k \}$ where k are the number of unique values. Then you have the levels of the factor, which is a vector of character strings mapped to these integers. It might seem a hassle to store what could easily be represented as characters as something this complicated, but other functions in R has unique interactions with factors. For example, plotting becomes more intuitive if you store a factor as a factor, rather than a character. A more formal presentation of the factor type variable will be presented in the Vote assignment in B4.
+
+```{r, message= F, warning= F}
+# create character vector of names
+(names <- as.character(c("Mikaela", "Anders", "Regina", "Gustav", "Anders")))
+# 4 unique values
+unique(names)
+# convert to factor
+(names <- factor(names))
+# each unique name becomes a level of the factor
+levels(names)
+```
+
+Note that R has ordered the levels in the way they first appear in the character vector. You can specify the levels yourselves in the factor creation. After the factor has been created however, changing the levels becomes more tricky as the the labels are mapped to integers, and changing the mapping changes the values as you see them. Lets to the process again, but I would like to specify the order of levels alphabetically. 
+
+```{r, message= F, warning= F}
+(names <- as.character(c("Mikaela", "Anders", "Regina", "Gustav", "Anders")))
+(names <- factor(names, levels = c("Anders", "Gustav", "Mikaela", "Regina")))
+```
+
+\section{Subsetting}
+
+One of the more tedious tasks, at least when getting to know R, is subsetting. There is an extremely popular package called 'dplyr' which is made for easier data wrangling (data manipulation) but this package is outside the scope of any of the B-level courses. Instead we will in large focus on using the which() command. 
+
+\subsection{Which()}
+Which() takes a object of booleans (TRUE & FALSE) and gives the positions of TRUE. Basically you supply which with some logical statement and you will get the positions of where this is fulfilled. Let's look at an example with a vector of colours. Say that you want to get the position of "red".
+
+\vspace{3mm}
+
+```{r, message= F, warning= F}
+colour <- c("red", "blue", "blue", "red", "green", "white", "blue")
+colour == "red"
+```
+
+Using == on the vector starts a iterative process where R loops through all the elements of the colour vector and checks whether they are red or not, and returns a vector of TRUE and FALSE. If you supply which() with this vector it will give you back a vector of the positions of TRUE.
+
+\vspace{3mm}
+
+```{r, message= F, warning= F}
+which(colour == "red")
+```
+
+This vector of values is something you can easily use to subset the vector.
+
+```{r, message= F, warning= F}
+colour[which(colour == "red")]
+```
+
+It might seem hard to grasp the usefuleness in this example, but let's apply this on a data frame instead. Let's take a look at the well known flower iris data set to get a sense of how you can use the which() command. This dataset comes with the base package $datasets$, you can see  what other datasets are available using the command $library(help = "datasets")$.
+
+```{r, message= F, warning= F}
+str(iris)
+```
+
+If I asked you to give me the mean sepal width of setosa, how would you go about this? Using the which() command, we can start by extracting the row positions of setosa. And remember that we can use \$ to subset a data frame by variable (column) names.
+
+```{r, message= F, warning= F}
+which(iris$Species == "setosa")
+```
+
+This vector contains the positions of setosa. From here on out there are many ways to go about getting the mean of sepal width. I'd prefer not to save the vector as a new object in the environment (as it quickly gets cluttered up with stuff) but you can ofcourse do that. This is how I would go about getting the mean.
+
+```{r, message= F, warning= F}
+mean(iris$Sepal.Width[which(iris$Species == "setosa")])
+```
+
+So first, $iris\$Sepal.Width$ extracts the sepal width column from the iris dataframe. This object is a vector. 
+
+```{r, message= F, warning= F}
+is.vector(iris$Sepal.Width)
+```
+When you want to use the square brackets for subsetting you therefore only supply one dimension to subset based on (since a vector only has length, whilst a matrix has columns and rows). So in the square brackets you supply the vector of positions where Species == "setosa". 
+
+
+Note that there are many logical operators, apart from '=='. Examples are <, >, <=, >=, != etc. 
+
+\subsection{Sidenote: multiple logical conditions.}
+
+Say that you wanted to get the mean of sepal width for both virginica and setosa, how could you go about that? Well, since you have three types of species you could simple use the not equal operator and find positions of != "versicolor". But if there where more than three species the most efficient way would be to use multiple logical statements. For this you use |,& which are read as OR and AND respectively. Note that if you use only one symbol you will compare vectors element by element. And using double symbols (||, &&) will return a vector of length one, which means that it is used when comparing two or more length one vectors. Lets look at all four ways and try to figure out which one is the correct
+
+```{r, message= F, warning= F}
+which(iris$Species == "setosa" & iris$Species == "virginica")
+which(iris$Species == "setosa" && iris$Species == "virginica")
+which(iris$Species == "setosa" | iris$Species == "virginica")
+which(iris$Species == "setosa" || iris$Species == "virginica")
+```
+
+Well, for starters, using the double versions is not correct. I want a vector returned where checks has been made element wise. Secondly & is not correct. It will never evaluate to true as no entry can be both setosa and virginica. So | is correct. Just to give you an idea of how || is used, you can use it within a for loop to get the same result
+
+```{r, message= F, warning= F}
+vec <- NULL
+for(i in 1:nrow(iris)){
+  if((iris$Species[i] == "setosa") || (iris$Species[i] == "virginica") == TRUE){
+    vec[i] <- TRUE
+  } else {
+    vec[i] <- FALSE
+  }
+}
+
+which(vec)
+```
+
+Using the | and & can be treacherous as it won't throw an error if the vectors are of unequal length. If you think you are comparing two vectors of equal length, but one is 2 elements less, it will cycle through the first two values of the smaller vector, comparing it to the last two of the larger.
+
+\subsection{unique()}
+Although not only useful in the context of subsetting I will present this function for usage in this context. Let's say that you are uncertain of all the different types of species in the iris dataset. How would you go about inspecting the unique values? 
+
+```{r, message= F, warning= F}
+unique(iris$Species)
+```
+
+So, three types! You can use this if you feel uncertain about the spelling of a level of the factor. 
+
+```{r, message= F, warning= F}
+which(iris$Species == unique(iris$Species)[1])
+# equivalent to:
+# which(iris$Species == setosa)
+```
+
+Do not use the unique() command on numeric and integer vectors with many values, it will not return anything useful. Generally it will return as many values as there are elements in the vector.
+
+\subsection{Column Names and Positions}
+One common act in the beginning of your R careers is to look at the dataset in the global environment and to check for a variable name or to, as I often did, count which position a variable name has. As you might recall you can use the square brackets to subset a dataframe the same way you would a matrix, [$row index$, $column index$].
+
+The colnames() function returns the variable names of a dataframe. 
+
+```{r, message= F, warning= F}
+colnames(iris)
+```
+
+You can use this to subset the dataframe should you want. Say that you want the third element of columnnames
+
+```{r, message= F, warning= F}
+iris[, colnames(iris)[3]]
+```
+
+Techniqually I'm counting at the moment, but it's much easier to look at the vector of column names rather than opening the data into the reader or looking in the global environment. You want to spend as little time as possible doing manual tasks! 
+
+
+\section{Working with Data}
+
+\subsection{The .csv Format}
+
+Ofcourse excel files are used but it in general it surpassed vastly in usage by the .csv format. For example, data from SQL databases will often be saved to the .csv format. Csv stands for comma seperated value. These files are text files where the data points are most often seperated by commas (but often other symbols, such as tab and whitespace) and a new observation is assumed to be given by a new line. 
+
+\subsection{read.csv()}
+The most commonly used function for reading in .csv data files is the read.csv() function. In my working directory I have a text file named $japanese_emmigration.txt$ which contains data on japenese emmigration during the 20th century. Let's try loading the data using all the default settings of the read.csv() function and see what happens
+
+```{r, message= F, warning= F}
+(dat <- read.csv("japanese_emmigration.txt"))
+# 45 rows, 1 column
+nrow(dat);ncol(dat)
+```
+
+That does not look right at all! Using the default settings of read.csv() means that R is looking for ',' as value seperator, but my data has ';' as value seperator. It still has new line as seperator between observations. The results is that my data import gives me 45 observations of only one variable, which is a string containing all 7 variables in my data. Lets try this again, but manually specifying the seperator as ';'.
+
+```{r, message= F, warning= F}
+(dat <- read.csv("japanese_emmigration.txt", sep = ";"))
+# 45 rows, 7 columns
+nrow(dat);ncol(dat)
+```
+
+In general, I recommend that you open the file in your operating systems default text editor and look at what character is seperating the values. Note that if it is tab seperated you use '\\t' to represent it!
+
+Note that read.csv creates a dataframe in the global environment. On a side note, you could see the dataframe as a dynamic matrix of sorts. Matricies in R needs to contain the same type of objects in all positions (character, numeric etc.) whilst a data frame can have different type of objects in the column. The dataframe can be said to be homogenous with respect to the columns.
+
+```{r, message= F, warning= F}
+is.data.frame(dat)
+```
+
+\subsection{Variable Names}
+
+The variable names of my data is not informative to anyone else but me however. This is something you should fix directly! This is easily done using the colnames() function. Simply assign a vector of characters, the same length as the number of columns of the data frame, to the colnames() of the dataframe.
+
+```{r, message= F, warning= F}
+(colnames(dat) <- c("prefecture","emigrants","cultivated","farmland",
+                    "arable","labors","pioneer"))
+```
+
+\subsection{str() \& summary()}
+
+The str() function, standing for structure, is a good first step after you have imported the data to your satisfaction. This gives you a overview of your data.
+
+```{r, message= F, warning= F}
+str(dat)
+```
+
+They way I mainly use this function is to get a sense of whether all the variables has been interpreted correctly by R. For example, could pioneer by stored in a different manner than as an integer? How many unique values does that variable have?
+
+```{r, message= F, warning= F}
+unique(dat$pioneer)
+```
+
+So it is a binary variable. Perhaps it could better be stored as a factor? This would at least give more interpretable plots later. 
+
+```{r, message= F, warning= F}
+dat$pioneer <- as.factor(dat$pioneer)
+levels(dat$pioneer) <- c("No pioneer", "Pioneer")
+str(dat); dat$pioneer
+```
+
+Another reason for creating this factor with more informative values than 0 and 1 is that you don't forget what 0 and 1 stands for!
